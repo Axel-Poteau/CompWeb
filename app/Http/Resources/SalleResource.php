@@ -15,18 +15,15 @@ class SalleResource extends JsonResource
      * @return array<string, mixed>
      */
     public function toArray($request) {
-        return [
-            'id' => $this->id,
-            'nom_complet' => sprintf("%s %s",$this->prenom, $this->nom),
-            'age' => $this-> age];
+        return parent::toArray($request);
     }
     public function show($id) {
         $salle = Salle::findOrFail($id);
         return new SalleController($salle);
     }
     public function index() {
-        $salle = Salle::all();
-        return SalleResource::collection($salle);
+        $salles = Salle::all();
+        return SalleResource::collection($salles);
     }
 
 
