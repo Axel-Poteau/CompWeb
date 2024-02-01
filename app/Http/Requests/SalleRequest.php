@@ -11,7 +11,7 @@ class SalleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,15 +22,15 @@ class SalleRequest extends FormRequest
     public function rules() {
         return [
             'nom' => "required|string|between:5,50",
-            'prenom' => "required|string|between:5,50",
-            'age' => "numeric|between:18,65"
+            'adresse' => "required|string|between:5,50",
+            'code_postal' => "string|between:5,50",
+            'ville'=>"string|between:5,50"
         ];
     }
     public function messages(): array {
     return [
         'required' => 'Le champ :attribute est obligatoire',
         'between' => 'Le champ :attribute doit contenir entre :min et :max caractères.',
-        'age.between' => 'L\'age doit avoir une valeur comprise entre :min et :max.',
         ];
     }
 
