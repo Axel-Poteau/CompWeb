@@ -10,4 +10,6 @@ class Salle extends Model {
 
     public $timestamps = false;
     protected $fillable = ['nom', 'adresse', 'code_postal', 'ville'];
+
+    protected $hidden =[];
 }
