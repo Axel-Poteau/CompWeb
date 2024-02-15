@@ -7,9 +7,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use OpenApi\Attributes as OA;
 
-class User extends Authenticatable
-{
+#[OA\Schema(schema: 'User', title: 'Utilisateur', description: 'Un utilisateur connu de l\'application',
+    properties: [
+        new OA\Property(property: "id", type: "integer", format: "int64"),
+        new OA\Property(property: "name", type: "string"),
+        new OA\Property(property: "email", type: "string"),
+        new OA\Property(property: "roles", type: "array", items: new OA\Items(type: "string"))
+    ])]
+class User extends Authenticatable implements JWTSubject {
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -42,4 +50,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function roles() {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function getJWTIdentifier() {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims() {
+        return [
+            "roles" => $this->roles->pluck('nom'),
+        ];
+
+    }
 }
