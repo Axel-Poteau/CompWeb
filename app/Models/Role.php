@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
-{
+class Role extends Model {
     use HasFactory;
 
     public $timestamps = false;
@@ -20,6 +19,7 @@ class Role extends Model
     const VISITEUR = "visiteur";
 
     const ROLES = [self::ADMIN, self::CREATE_SALLE, self::EDIT_SALLE, self::VIEW_SALLE, self::VISITEUR,];
+
 
 
 }
