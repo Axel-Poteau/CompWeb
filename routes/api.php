@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\SalleController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,23 +17,41 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
     Route::post('logout', 'logout');
     Route::post('refresh', 'refresh');
+    Route::get('me', 'me');
 });
 
 
+// Route::apiResource('salles', SalleController::class);
 
-Route::get('salles', [SalleController::class, 'index'])->name('salles.index');
-Route::post('salles', [SalleController::class, 'store'])->name('salles.store');
-Route::get('salles/{id}', [SalleController::class, 'show'])
-    ->where('id', '^[0-9]+$')
-    ->name('salles.show');
-Route::put('salles/{id}', [SalleController::class, 'update'])
-    ->where('id', '^[0-9]+$')
-    ->name('salles.update');
-Route::delete('salles/{id}', [SalleController::class, 'destroy'])
-    ->where('id', '^[0-9]+$')
-    ->name('salles.destroy');
+Route::prefix('salles')->group(function () {
+    Route::get('/', [SalleController::class, 'index'])
+        ->middleware(['auth', 'role:visiteur'])
+        ->name('salles.index ');
+    Route::get('/{id}', [SalleController::class, 'show'])->where('id', '[0-9]+')
+        ->middleware(['auth', 'role:view-salle'])
+        ->name('salles.show');
+    Route::put('/{id}', [SalleController::class, 'update'])->where('id', '[0-9]+')
+        ->middleware(['auth', 'role:edit-salle'])
+        ->name('salles.update');
+    Route::post('/', [SalleController::class, 'store'])
+        ->middleware(['auth', 'role:create-salle'])
+        ->name('salles.store');
+    Route::delete('/{id}', [SalleController::class, 'destroy'])->where('id', '[0-9]+')
+        ->middleware(['auth', 'role:admin'])
+        ->name('salles.destroy');
+});
+
+Route::prefix('users')->group(function () {
+    Route::delete('/{id}', [UserController::class, 'destroy'])->where('id', '[0-9]+')
+        ->middleware(['auth', 'role:admin'])
+        ->name('users.destroy ');
+});
