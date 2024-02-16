@@ -4,81 +4,190 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Salle;
-use HttpResponseException;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Validator;
+use OpenApi\Attributes as OA;
 
+#[OA\Info(version: "0.1", title: "My First API")]
+#[OA\Server(url: "http://127.0.0.1:8000")]
 class SalleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    #[OA\Get(
+        path: '/api/salle',
+        description: 'Get a list of salles.',
+        tags: ['Salle']
+    )]
+    #[OA\Response(response: '200', description: 'Successful operation')]
     public function index()
     {
-        $salles=Salle::all();
+        $salles = Salle::all();
         return response()->json([
-            'status'=>true,
-            'message'=>"Salles Index successfully",
-            'salles'=>$salles
-        ],200);
+            'status' => true,
+            'message' => "Salles Index successfully",
+            'salles' => $salles
+        ], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    #[OA\Post(
+        path: '/api/salle',
+        description: 'Create a new salle.',
+        tags: ['Salle'],
+    )]
+    #[OA\Parameter(
+        name: 'nom',
+        description: 'name of salle',
+        in: 'query',
+        required: true,
+        schema: new OA\Schema(
+            type: 'string',
+        )
+    )]
+    #[OA\Parameter(
+        name: 'adresse',
+        description: 'adresse of salle',
+        in: 'query',
+        required: true,
+        schema: new OA\Schema(
+            type: 'string',
+        )
+    )]
+    #[OA\Parameter(
+        name: 'code_postal',
+        description: 'code postal of salle',
+        in: 'query',
+        required: true,
+        schema: new OA\Schema(
+            type: 'string',
+        )
+    )]
+    #[OA\Parameter(
+        name: 'ville',
+        description: 'city of salle',
+        in: 'query',
+        required: true,
+        schema: new OA\Schema(
+            type: 'string',
+        )
+    )]
+    #[OA\Response(response: '200', description: 'Successful operation')]
     public function store(Request $request)
     {
-        $salle=new Salle();
-        $salle->nom=$request->nom;
-        $salle->adresse=$request->adresse;
-        $salle->code_postal=$request->code_postal;
-        $salle->ville=$request->ville;
+        $salle = new Salle();
+        $salle->nom = $request->nom;
+        $salle->adresse = $request->adresse;
+        $salle->code_postal = $request->code_postal;
+        $salle->ville = $request->ville;
         $salle->save();
+
         return response()->json([
-            'status'=>true,
-            'message'=>"Salle Store successfully",
-            'salle'=>$salle
-        ],200);
+            'status' => true,
+            'message' => "Salle stored successfully",
+            'salle' => $salle
+        ], 200);
     }
 
-    /**
-     * Display the specified resource.
-     */
+    #[OA\Get(
+        path: '/api/salle/{salle}',
+        description: 'Get information about a specific salle.',
+        tags: ['Salle']
+    )]
+    #[OA\Parameter(
+        name: 'salle',
+        description: 'ID of salle',
+        in: 'path',
+        required: true,
+        schema: new OA\Schema(type: 'integer')
+    )]
+    #[OA\Response(response: '200', description: 'Successful operation')]
     public function show(string $id)
     {
-        $salle=Salle::findOrFail($id);
+        $salle = Salle::findOrFail($id);
         return response()->json([
-            'status'=>true,
-            'message'=>"Salles Show successfully",
-            'salles'=>$salle
-        ],200);
+            'status' => true,
+            'message' => "Salle details retrieved successfully",
+            'salle' => $salle
+        ], 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    #[OA\Put(
+        path: '/api/salle/{salle}',
+        description: 'Update information about a specific salle.',
+        tags: ['Salle']
+    )]
+    #[OA\Parameter(
+        name: 'salle',
+        description: 'ID of salle',
+        in: 'path',
+        required: true,
+        schema: new OA\Schema(type: 'integer')
+
+    )]
+    #[OA\Parameter(
+        name: 'nom',
+        description: 'name of salle',
+        in: 'query',
+        schema: new OA\Schema(
+            type: 'string',
+        )
+    )]
+    #[OA\Parameter(
+        name: 'adresse',
+        description: 'adresse of salle',
+        in: 'query',
+        schema: new OA\Schema(
+            type: 'string',
+        )
+    )]
+    #[OA\Parameter(
+        name: 'code_postal',
+        description: 'code postal of salle',
+        in: 'query',
+        schema: new OA\Schema(
+            type: 'string',
+        )
+    )]
+    #[OA\Parameter(
+        name: 'ville',
+        description: 'city of salle',
+        in: 'query',
+        schema: new OA\Schema(
+            type: 'string',
+        )
+    )]
+    #[OA\Response(response: '200', description: 'Successful operation')]
     public function update(Request $request, string $id)
     {
-        $salle=Salle::findOrFail($id);
+        $salle = Salle::findOrFail($id);
         $salle->update($request->all());
+
         return response()->json([
-            'status'=>true,
-            'message'=>"Salle Update successfully",
-            'salle'=>$salle
-        ],200);
+            'status' => true,
+            'message' => "Salle updated successfully",
+            'salle' => $salle
+        ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    #[OA\Delete(
+        path: '/api/salle/{salle}',
+        description: 'Delete a specific salle.',
+        tags: ['Salle']
+    )]
+    #[OA\Parameter(
+        name: 'salle',
+        description: 'ID of salle',
+        in: 'path',
+        required: true,
+        schema: new OA\Schema(type: 'integer')
+    )]
+    #[OA\Response(response: '200', description: 'Successful operation')]
     public function destroy(string $id)
     {
-        $salle=Salle::findOrFail($id);
+        $salle = Salle::findOrFail($id);
         $salle->delete();
+
         return response()->json([
-            'status'=>true,
-            'message'=>"Salles Delete successfully",
-            'salle'=>$salle
-        ],200);
+            'status' => true,
+            'message' => "Salle deleted successfully",
+            'salle' => $salle
+        ], 200);
     }
 }
