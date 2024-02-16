@@ -236,6 +236,8 @@ local.properties
 .loadpath
 .recommenders
 
+composer.lock
+
 # External tool builders
 .externalToolBuilders/
 
