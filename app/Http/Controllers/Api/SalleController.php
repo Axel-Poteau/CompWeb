@@ -17,7 +17,7 @@ class SalleController extends Controller
         tags: ['Salle']
     )]
     #[OA\Response(response: '200', description: 'Successful operation')]
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
         $salles = Salle::all();
         return response()->json([
@@ -69,7 +69,7 @@ class SalleController extends Controller
         )
     )]
     #[OA\Response(response: '200', description: 'Successful operation')]
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         $salle = new Salle();
         $salle->nom = $request->nom;
@@ -98,7 +98,7 @@ class SalleController extends Controller
         schema: new OA\Schema(type: 'integer')
     )]
     #[OA\Response(response: '200', description: 'Successful operation')]
-    public function show(string $id)
+    public function show(string $id): \Illuminate\Http\JsonResponse
     {
         $salle = Salle::findOrFail($id);
         return response()->json([
@@ -154,7 +154,7 @@ class SalleController extends Controller
         )
     )]
     #[OA\Response(response: '200', description: 'Successful operation')]
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): \Illuminate\Http\JsonResponse
     {
         $salle = Salle::findOrFail($id);
         $salle->update($request->all());
@@ -179,7 +179,7 @@ class SalleController extends Controller
         schema: new OA\Schema(type: 'integer')
     )]
     #[OA\Response(response: '200', description: 'Successful operation')]
-    public function destroy(string $id)
+    public function destroy(string $id): \Illuminate\Http\JsonResponse
     {
         $salle = Salle::findOrFail($id);
         $salle->delete();

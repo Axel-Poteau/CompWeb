@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('adresse');
             $table->string('code_postal', 6);
             $table->string('ville', 50);
+            $table->boolean('valide')->default(false);
+            $table->unsignedBigInteger('user_id');
         });
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\SalleController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -50,6 +51,26 @@ Route::prefix('salles')->group(function () {
     Route::delete('/{id}', [SalleController::class, 'destroy'])->where('id', '[0-9]+')
         ->middleware(['auth', 'role:admin'])
         ->name('salles.destroy');
+});
+
+// Route::apiResource('clients', ClientController::class);
+
+Route::prefix('clients')->group(function () {
+    Route::get('/', [ClientController::class, 'index'])
+        ->middleware(['auth', 'role:visiteur'])
+        ->name('clients.index ');
+    Route::get('/{id}', [ClientController::class, 'show'])->where('id', '[0-9]+')
+        ->middleware(['auth', 'role:view-salle'])
+        ->name('clients.show');
+    Route::put('/{id}', [ClientController::class, 'update'])->where('id', '[0-9]+')
+        ->middleware(['auth', 'role:edit-salle'])
+        ->name('clients.update');
+    Route::post('/', [ClientController::class, 'store'])
+        ->middleware(['auth', 'role:create-salle'])
+        ->name('clients.store');
+    Route::delete('/{id}', [ClientController::class, 'destroy'])->where('id', '[0-9]+')
+        ->middleware(['auth', 'role:admin'])
+        ->name('clients.destroy');
 });
 
 Route::prefix('users')->group(function () {
