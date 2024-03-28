@@ -11,9 +11,9 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use OpenApi\Attributes as OA;
-
 
 class AuthController extends Controller {
     public function __construct() {
@@ -128,6 +128,7 @@ class AuthController extends Controller {
         ]
     )]
     public function register(UserRequest $request) {
+        DB::beginTransaction();
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,

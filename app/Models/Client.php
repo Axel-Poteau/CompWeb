@@ -14,4 +14,8 @@ class Client extends Model
     public function avis() {
 
     }
+    public function user()
+    {
+        return $this->hasOne(User::class);
+    }
 }

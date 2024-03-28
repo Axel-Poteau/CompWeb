@@ -1,0 +1,506 @@
+openapi: 3.0.0
+info:
+  title: 'My First API'
+  version: '0.1'
+servers:
+  -
+    url: 'http://127.0.0.1:8000'
+paths:
+  /login:
+    post:
+      tags:
+        - Auth
+      description: "Connexion à l'application"
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: Connexion
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { type: string }
+                  user: { $ref: '#/components/schemas/User' }
+                  authorisation: { properties: { token: { type: string }, type: { type: string } }, type: object }
+                type: object
+        '401':
+          description: 'Connexion invalide'
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { type: string }
+                  message: { type: string }
+                type: object
+        '422':
+          description: 'Connexion avec information invalide'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                  error: { properties: { message: { type: array, items: { type: string } } }, type: object }
+                type: object
+      security: []
+  /register:
+    post:
+      tags:
+        - Auth
+      description: "Enregistrement d'un utilisateur à l'application"
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: Connexion
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { type: string }
+                  message: { type: string }
+                  user: { $ref: '#/components/schemas/User' }
+                  authorisation: { properties: { token: { type: string }, type: { type: string } }, type: object }
+                type: object
+        '422':
+          description: 'Connexion avec information invalide'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                  error: { properties: { message: { type: array, items: { type: string } } }, type: object }
+                type: object
+      security: []
+  /logout:
+    post:
+      tags:
+        - Auth
+      description: "déconnexion d'un utilisateur à l'application"
+      operationId: logout
+      responses:
+        '200':
+          description: 'Déconnexion valide'
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { type: string }
+                  message: { type: string }
+                type: object
+        '401':
+          description: 'Déconnexion invalide'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+      security:
+        -
+          bearerAuth:
+            role: visiteur
+  /refresh:
+    post:
+      tags:
+        - Auth
+      description: 'Récupère un nouveau token'
+      operationId: refresh
+      responses:
+        '200':
+          description: 'Refresh Valide'
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { type: string }
+                  user: { $ref: '#/components/schemas/User' }
+                type: object
+        '401':
+          description: 'Refresh invalide'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+      security:
+        -
+          bearerAuth: []
+  /me:
+    post:
+      tags:
+        - Auth
+      description: "Information sur l'utilisateur connecté"
+      operationId: me
+      responses:
+        '200':
+          description: 'Utilisateur connecté'
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { type: string }
+                  user: { $ref: '#/components/schemas/User' }
+                type: object
+        '401':
+          description: 'Utilisateur invalide'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+      security:
+        -
+          bearerAuth: []
+  /api/client:
+    get:
+      tags:
+        - Client
+      description: 'Get a list of clients.'
+      operationId: 0a18e156d37b5b1b2b76f40ad6d88f0f
+      responses:
+        '200':
+          description: 'Successful operation'
+    post:
+      tags:
+        - Client
+      summary: 'Store a newly created resource in storage.'
+      description: 'Create a new client.'
+      operationId: 71b9c5731a56b998d9660dca68109f0b
+      parameters:
+        -
+          name: nom
+          in: query
+          description: 'firstname of client'
+          schema:
+            type: string
+        -
+          name: prenom
+          in: query
+          description: 'lastname of client'
+          schema:
+            type: string
+        -
+          name: adresse
+          in: query
+          description: 'adresse of client'
+          schema:
+            type: string
+        -
+          name: code_postal
+          in: query
+          description: 'code postal of client'
+          schema:
+            type: string
+        -
+          name: ville
+          in: query
+          description: 'city of client'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+  '/api/client/{id}':
+    get:
+      tags:
+        - Client
+      summary: 'Display the specified resource.'
+      description: 'Get a specific client.'
+      operationId: d8c3740a805d96c4d13f0d5208ee13af
+      responses:
+        '200':
+          description: 'Successful operation'
+    put:
+      tags:
+        - Client
+      summary: 'Update the specified resource in storage.'
+      description: 'Update a specific client.'
+      operationId: 926ae2b191c31ee61b478104b07463a5
+      parameters:
+        -
+          name: 'client id'
+          in: path
+          description: 'ID of client'
+          required: true
+          schema:
+            type: integer
+        -
+          name: client
+          in: path
+          description: 'ID of client'
+          required: true
+          schema:
+            type: integer
+        -
+          name: nom
+          in: query
+          description: 'firstname of client'
+          schema:
+            type: string
+        -
+          name: prenom
+          in: query
+          description: 'lastname of client'
+          schema:
+            type: string
+        -
+          name: adresse
+          in: query
+          description: 'adresse of client'
+          schema:
+            type: string
+        -
+          name: code_postal
+          in: query
+          description: 'code postal of client'
+          schema:
+            type: string
+        -
+          name: ville
+          in: query
+          description: 'city of client'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+    delete:
+      tags:
+        - Client
+      summary: 'Remove the specified resource from storage.'
+      description: 'Delete a specific client.'
+      operationId: 965bd9e4886723e57fa899c9a5678bf8
+      parameters:
+        -
+          name: 'client id'
+          in: path
+          description: 'ID of client'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Successful operation'
+  /api/salle:
+    get:
+      tags:
+        - Salle
+      description: 'Get a list of salles.'
+      operationId: b1c74db6d59efbc69e5baf369885c207
+      responses:
+        '200':
+          description: 'Successful operation'
+    post:
+      tags:
+        - Salle
+      description: 'Create a new salle.'
+      operationId: 468c552be1a5f39518a66d9bf13c8033
+      parameters:
+        -
+          name: nom
+          in: query
+          description: 'name of salle'
+          required: true
+          schema:
+            type: string
+        -
+          name: adresse
+          in: query
+          description: 'adresse of salle'
+          required: true
+          schema:
+            type: string
+        -
+          name: code_postal
+          in: query
+          description: 'code postal of salle'
+          required: true
+          schema:
+            type: string
+        -
+          name: ville
+          in: query
+          description: 'city of salle'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+  '/api/salle/{salle}':
+    get:
+      tags:
+        - Salle
+      description: 'Get information about a specific salle.'
+      operationId: 8406eb15dbb3f3c399ad95a74606e861
+      parameters:
+        -
+          name: salle
+          in: path
+          description: 'ID of salle'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Successful operation'
+    put:
+      tags:
+        - Salle
+      description: 'Update information about a specific salle.'
+      operationId: 0a9fd969bad8420bfc2d4368bc56a24b
+      parameters:
+        -
+          name: salle
+          in: path
+          description: 'ID of salle'
+          required: true
+          schema:
+            type: integer
+        -
+          name: nom
+          in: query
+          description: 'name of salle'
+          schema:
+            type: string
+        -
+          name: adresse
+          in: query
+          description: 'adresse of salle'
+          schema:
+            type: string
+        -
+          name: code_postal
+          in: query
+          description: 'code postal of salle'
+          schema:
+            type: string
+        -
+          name: ville
+          in: query
+          description: 'city of salle'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+    delete:
+      tags:
+        - Salle
+      description: 'Delete a specific salle.'
+      operationId: c3157af02ede64fb9f1b34d687a15832
+      parameters:
+        -
+          name: salle
+          in: path
+          description: 'ID of salle'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Successful operation'
+  '/users/{id}':
+    delete:
+      tags:
+        - Users
+      description: 'Supprime un utilisateur'
+      operationId: destroy-user
+      parameters:
+        -
+          name: id
+          in: path
+          description: "Identifiant de l'utilisateur"
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Supprime un utilisateur'
+          content:
+            application/json:
+              schema:
+                properties:
+                  status: { type: boolean }
+                  message: { type: string }
+                type: object
+        '401':
+          description: 'Non autorisé'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+        '404':
+          description: 'Utilisateur non trouvée'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+      security:
+        -
+          bearerAuth:
+            role: admin
+components:
+  schemas:
+    Salle:
+      title: 'Salle de sport'
+      description: 'Les salles de sport'
+      properties:
+        id:
+          type: integer
+          format: int64
+        nom:
+          type: string
+        adresse:
+          type: string
+        codePostal:
+          type: string
+        ville:
+          type: string
+      type: object
+    User:
+      title: Utilisateur
+      description: "Un utilisateur connu de l'application"
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        email:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+      type: object
